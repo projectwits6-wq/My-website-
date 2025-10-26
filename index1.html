@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Will you be my girlfriend? — Proposal</title>
+  <meta name="description" content="A soft editorial-style proposal page. Replace texts and images to personalize." />
+
+  <!-- FONTS: replace or keep. If offline, swap to system fonts in CSS. -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ------------------ THEME VARIABLES ------------------ */
+    :root{
+      --bg-cream: #fbf7f5;
+      --muted-blue: #cfdfe6;
+      --rose: #ffd6df;
+      --accent: #e96b6b;
+      --text: #111217;
+      --muted: #6b6b6b;
+      --max-width: 980px;
+      --gutter: 28px;
+    }
+
+    /* ------------------ RESET ------------------ */
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg-cream);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.35;
+      padding:0 0 80px 0;
+    }
+
+    a{text-decoration:none;color:inherit}
+
+    /* ------------------ PAGE LAYOUT ------------------ */
+    .container{max-width:var(--max-width);margin:0 auto;padding:40px var(--gutter)}
+
+    header{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+    .logo{font-weight:600;letter-spacing:0.06em}
+    nav .menu{font-size:18px;opacity:.6}
+
+    /* ------------------ HERO ------------------ */
+    .hero{position:relative;display:flex;gap:40px;align-items:center;padding:40px 0 120px}
+    .hero-left{flex:0 0 320px;z-index:2}
+    .portrait{width:320px;height:320px;object-fit:cover;border-radius:8px;box-shadow:0 8px 30px rgba(15,20,30,0.06)}
+
+    .hero-right{flex:1;position:relative;z-index:3}
+    .headline{font-family: 'Playfair Display', serif;font-weight:700;font-size:48px;margin:0 0 10px}
+    .subtext{max-width:58ch;color:var(--muted);font-size:16px}
+
+    /* Oversized faint name (background) */
+    .big-name{position:absolute;left:20px;top:8px;font-family:'Playfair Display',serif;font-weight:800;font-size:12vw;color:var(--rose);opacity:.20;pointer-events:none;line-height:0.85;transform:translateY(-8%);z-index:1}
+
+    /* ------------------ ABOUT / LITTLE THINGS ------------------ */
+    section{padding:80px 0}
+    .about .lead{font-family:'Playfair Display',serif;font-size:28px;margin:0 0 8px}
+    .about p{max-width:62ch;color:var(--muted)}
+
+    .little-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:22px;margin-top:24px}
+    .card{background:rgba(255,255,255,0.6);padding:18px;border-radius:12px;backdrop-filter:blur(4px);box-shadow:0 6px 18px rgba(15,20,30,0.04)}
+    .card h4{margin:0 0 6px;font-family:'Playfair Display',serif}
+    .card p{margin:0;color:var(--muted);font-size:15px}
+
+    /* ------------------ REASONS (pink arc) ------------------ */
+    .reasons{background:linear-gradient(180deg,var(--rose),#fff);border-radius:40px;padding:60px 20px;text-align:center}
+    .reasons h2{font-family:'Playfair Display',serif;font-size:46px;margin:0 0 14px}
+    .chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:18px}
+    .chip{padding:10px 16px;border-radius:999px;border:1px solid rgba(0,0,0,0.06);background:white;font-weight:600}
+
+    /* ------------------ CTA / QUESTION ------------------ */
+    .cta{background:var(--muted-blue);padding:80px 20px;border-radius:10px;margin-top:40px}
+    .cta .ask{font-family:'Playfair Display',serif;font-size:46px;margin:0 0 12px}
+    .cta .small{color:var(--muted);max-width:60ch;margin:0 auto 24px}
+    .actions{display:flex;gap:18px;justify-content:center;align-items:center}
+    .btn{padding:14px 22px;border-radius:40px;border:0;font-weight:700;cursor:pointer;font-size:16px}
+    .btn:focus{outline:3px solid rgba(0,0,0,0.08)}
+    .btn-yes{background:linear-gradient(90deg,#ff7f9e,#ffd6df);color:#4a1f2f}
+    .btn-no{background:transparent;border:2px solid rgba(0,0,0,0.06);color:var(--text)}
+
+    /* ------------------ MODALS AND CONFETTI ------------------ */
+    .overlay{position:fixed;inset:0;background:rgba(10,12,15,0.32);display:flex;align-items:center;justify-content:center;z-index:999;opacity:0;pointer-events:none;transition:opacity .25s}
+    .overlay.show{opacity:1;pointer-events:auto}
+    .modal{background:white;padding:28px;border-radius:12px;max-width:560px;text-align:center;box-shadow:0 18px 40px rgba(2,6,23,0.2)}
+    .modal h3{margin:0 0 12px;font-family:'Playfair Display',serif}
+
+    /* confetti container (hidden until yes) */
+    #confetti{position:fixed;left:0;top:0;width:100%;height:0;pointer-events:none;z-index:1000;overflow:visible}
+    .confetti-piece{position:absolute;width:10px;height:18px;border-radius:2px;opacity:0;transform:translateY(-20vh) rotate(0deg)}
+
+    /* simple fall animation (generated via JS) */
+
+    /* ------------------ FOOTER ------------------ */
+    footer{padding:40px 0;text-align:center;color:var(--muted)}
+
+    /* ------------------ RESPONSIVE ------------------ */
+    @media (max-width:880px){
+      .hero{flex-direction:column;align-items:flex-start}
+      .hero-left{width:220px}
+      .portrait{width:220px;height:220px}
+      .big-name{font-size:18vw;left:6%;top:-18px}
+      .headline{font-size:34px}
+      .cta .ask{font-size:32px}
+    }
+
+    @media (max-width:420px){
+      .container{padding:20px}
+      .headline{font-size:28px}
+    }
+  </style>
+</head>
+
+<body>
+  <!--
+    PERSONALIZATION: Replace the image files in /images/ and edit texts below.
+    - hero portrait src="images/her-portrait.jpg"
+    - Replace all copy inside <h*> and <p>
+    - Fonts: change the Google Fonts link if you prefer other typefaces
+  -->
+
+  <div class="container">
+    <header>
+      <div class="logo">you & me</div>
+      <nav aria-label="site">
+        <div class="menu">Memories • Notes</div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero" aria-labelledby="intro">
+        <div class="big-name">SWABI</div>
+
+        <div class="hero-left">
+          <img alt="Portrait of her" class="portrait" src="hero.jpg" />
+        </div>
+
+        <div class="hero-right">
+          <h1 id="intro" class="headline">Hey Princess</h1>
+          <p class="subtext">You were wondering why i took so long...well this is why😅.I wanted to do something different,cinematic and not the generic "will you be my girlfriend paragraph"(I may also have seen you repost something like this ,but who cares🤷🏾‍♂️ ) </p>
+        </div>
+      </section>
+
+      <!-- ABOUT / LITTLE THINGS -->
+      <section class="about" aria-labelledby="about-title">
+        <div class="container">
+          <h2 id="about-title" class="lead">Hi! You are Swabi</h2>
+          <p>Energetic, Funny, and the kind of person who I can never have a dull moment with.The kind of person that i look forward to being with and talking too (even at the cost of my sleep schedule)</p>
+
+          <div class="little-grid" role="list">
+            <div class="card" role="listitem">
+              <h4>She's weird...in a good way</h4>
+              <p>I dont know if its her humour(or an actual mental condition)but her craziness and bubbly personality make her that much more fun to be around.</p>
+            </div>
+            <div class="card" role="listitem">
+              <h4>She's gorgeous😩</h4>
+              <p>Bruh ,have you seen her ?,and the smile ...BOOM SHAKA LAKAAA</p>
+            </div>
+            <div class="card" role="listitem">
+              <h4>Calmness</h4>
+              <p>Despite her occasional crashouts she has a good head on her shoulders and i actually find her emotional intelligence a bigger bonus of her  </p>
+            </div>
+            <div class="card" role="listitem">
+              <h4>Cultured </h4>
+              <p>She knows ball ladies and gentlemen ,SHE.KNOWS.BALL</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REASONS -->
+      <section class="reasons" aria-labelledby="reasons-title">
+        <div class="container">
+          <h2 id="reasons-title">Reasons I'd like to be with you </h2>
+          <div class="chips" role="list">
+            <div class="chip" role="listitem">You are peaceful to be around </div>
+            <div class="chip" role="listitem">I like you ...duhh</div>
+            <div class="chip" role="listitem">I am always laughing when im around you(Yes i actually admitted it )</div>
+            <div class="chip" role="listitem">I am actually curious to see where this goes </div>
+            <div class="chip" role="listitem">You are fun to annoy😀 </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA / QUESTION -->
+      <section class="cta" aria-labelledby="cta-title">
+        <div class="container">
+          <h2 id="cta-title" class="ask">So... will you be my girlfriend?</h2>
+          <p class="small">I built this page with small truths and images that show who you are to me .Thanks for watching the show</p>
+
+          <div class="actions">
+            <button id="yesBtn" class="btn btn-yes" aria-label="Yes, I will">YES 💖</button>
+            <button id="noBtn" class="btn btn-no" aria-label="No, not now">NO 😅</button>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <p>Made with a ridiculous amount of hope.</p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- CONFETTI LAYER -->
+  <div id="confetti" aria-hidden="true"></div>
+
+  <!-- MODAL / OVERLAY -->
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document">
+      <h3 id="modalTitle">...</h3>
+      <p id="modalBody">...</p>
+      <div style="margin-top:16px;display:flex;gap:10px;justify-content:center">
+        <button onclick="closeOverlay()" class="btn btn-no">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- Simple personalization helpers ---------- */
+    // If you want to programmatically set texts, you can target elements by id.
+
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const overlay = document.getElementById('overlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const confettiRoot = document.getElementById('confetti');
+
+    yesBtn.addEventListener('click', () => {
+      // prevent rapid double clicks
+      yesBtn.disabled = true;
+      yesBtn.setAttribute('aria-pressed','true');
+
+      // show celebration modal
+      showModal('She said YES!','she actually said yes !!!');
+
+      // launch confetti
+      launchConfetti();
+
+      // store answer locally so it doesn't re-trigger accidentally
+      try { localStorage.setItem('proposalAnswer','yes') } catch(e){}
+    });
+
+    noBtn.addEventListener('click', () => {
+      showModal('Damn — thank you for being honest.',');
+      try { localStorage.setItem('proposalAnswer','no') } catch(e){}
+    });
+
+    function showModal(title, body){
+      modalTitle.textContent = title;
+      modalBody.textContent = body;
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden','false');
+    }
+    function closeOverlay(){
+      overlay.classList.remove('show');
+      overlay.setAttribute('aria-hidden','true');
+    }
+
+    window.closeOverlay = closeOverlay; // expose for inline button
+
+    /* ---------- Lightweight confetti generator ---------- */
+    function launchConfetti(){
+      const colors = ['#ff7f9e','#ffd6df','#fbe7c6','#cdeef6','#c8f7d4','#ffd9a8'];
+      const pieces = 72;
+      const w = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+
+      for(let i=0;i<pieces;i++){
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        const size = Math.floor(Math.random()*12)+8; // 8-20px
+        el.style.width = size + 'px';
+        el.style.height = Math.floor(size*1.4) + 'px';
+        el.style.left = Math.floor(Math.random()*w) + 'px';
+        el.style.top = '-40px';
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        el.style.opacity = Math.random()*0.9 + 0.4;
+        el.style.transform = `translateY(-20vh) rotate(${Math.random()*360}deg)`;
+        el.style.transition = `transform ${Math.random()*2+3}s cubic-bezier(.2,.7,.2,1), opacity .8s ease-in`;
+        confettiRoot.appendChild(el);
+
+        // trigger animation in next frame
+        requestAnimationFrame(()=>{
+          const fallX = (Math.random()-0.5)*120; // sideways drift
+          const fallY = window.innerHeight + Math.random()*300 + 200;
+          const rotate = Math.random()*720 - 360;
+          el.style.transform = `translate(${fallX}px, ${fallY}px) rotate(${rotate}deg)`;
+          el.style.opacity = '1';
+        });
+      }
+
+      // remove confetti after animation ends
+      setTimeout(()=>{
+        confettiRoot.innerHTML = '';
+      },6000);
+    }
+
+    // If the user previously answered, reflect it
+    try{
+      const prev = localStorage.getItem('proposalAnswer');
+      if(prev === 'yes'){
+        yesBtn.disabled = true;
+      }
+    }catch(e){}
+
+    // Small accessibility: close overlay on Escape
+    window.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape' && overlay.classList.contains('show')) closeOverlay();
+    });
+  </script>
+</body>
+</html>
